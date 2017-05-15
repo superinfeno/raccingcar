@@ -12,6 +12,7 @@ public class Global {
     public static int ROAD = R.drawable.road;
     public static final int GAME_THREAD_FPS_SLEEP = (1000 / 60);
     public static int CAR = R.drawable.carr01;
+    public static int CAR2 = R.drawable.player_car;
     public static int GAME_SCREEN_WIDTH = 0;
     public static int GAME_SCREEN_HEIGHT = 0;
     public static int PLAYER_ACTION = 0;

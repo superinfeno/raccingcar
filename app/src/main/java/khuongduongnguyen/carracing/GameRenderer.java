@@ -9,6 +9,8 @@ import android.opengl.GLSurfaceView.Renderer;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import static khuongduongnguyen.carracing.Global.context;
+
 public class GameRenderer implements Renderer{
 
     private TexRoad road = new TexRoad();
@@ -17,6 +19,10 @@ public class GameRenderer implements Renderer{
     private long loopRunTime = 0;
     private TexCar car = new TexCar();
     private float roadYOffset = 0.0f;
+    private float opponent = 6.66f;
+    private float opponent2 = 7.96f;
+    private float opponent3 = 9.16f;
+    private float opponent4 = 10.56f;
     private float carSpeed = 0.0f;
     private TexController right = new TexController();
     private TexController left = new TexController();
@@ -24,8 +30,9 @@ public class GameRenderer implements Renderer{
     private static float carLLimit = 1.8f;
     private static float carRLimit = 3.8f;
     private static float carCenterPos = 2.8f;
-
-    GameActivity b;
+    private float saiso = 0f;
+    private float i = 0f;
+    private TexCar chalenger = new TexCar();
 
     @Override
     public void onDrawFrame(GL10 gl) {
@@ -44,12 +51,81 @@ public class GameRenderer implements Renderer{
         DrawCar(gl);
         DrawLeft(gl);
         DrawRight(gl);
+        Drawchalenger(gl);
+        //crash();
+
 
         ScrollRoad();
         Turn();
         gl.glEnable(GL10.GL_BLEND);
         gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
     }
+
+    public void crash()
+    {
+        if(opponent <= 2f) {
+            if (carCurrentPos >= 2.5f & carCurrentPos <= 3.1f) {
+                carSpeed = 0;
+                carSpeed -= 0.0002f;
+            }
+            else{
+                opponent = 13f + saiso;
+                saiso += 0.08f*i;
+                i++;
+            }
+        }
+        if(opponent2 <= 2f) {
+            if (carCurrentPos >= 1.5f & carCurrentPos <= 2.1f) {
+                carSpeed = 0;
+                carSpeed -= 0.0002f;
+            }
+            else{
+                opponent2 = 13f + saiso;
+                saiso += 0.08f*i;
+                i++;
+            }
+        }
+        if(opponent3 <= 2f) {
+            if (carCurrentPos >= 3.5f & carCurrentPos <= 4.1f) {
+                carSpeed = 0;
+                carSpeed -= 0.0002f;
+            }
+            else{
+                opponent3 = 13f + saiso;
+                saiso += 0.08f*i;
+                i++;
+            }
+        }
+        if(opponent4 <= 2f) {
+            if (carCurrentPos >= 1.5f & carCurrentPos <= 2.1f) {
+                carSpeed = 0;
+                carSpeed -= 0.0002f;
+            }
+            else{
+                opponent4 = 13f + saiso;
+                saiso += 0.08f*i;
+                i++;
+            }
+        }
+    }
+
+    public void Drawchalenger(GL10 gl){
+        gl.glMatrixMode(GL10.GL_MODELVIEW);
+        gl.glLoadIdentity();
+        gl.glPushMatrix();
+
+        gl.glScalef(.4f, 1f, 0f);
+        gl.glTranslatef(0.7f, 0f, 0f);
+
+        gl.glMatrixMode(GL10.GL_TEXTURE);
+        gl.glLoadIdentity();
+        gl.glTranslatef(0.0f, roadYOffset, 0.0f);
+
+        chalenger.draw(gl);
+        gl.glPopMatrix();
+        gl.glLoadIdentity();
+    }
+
 
     public void DrawCar(GL10 gl){
         gl.glMatrixMode(GL10.GL_MODELVIEW);
@@ -65,7 +141,6 @@ public class GameRenderer implements Renderer{
 
         car.draw(gl);
         gl.glPopMatrix();
-
         gl.glLoadIdentity();
     }
 
@@ -90,7 +165,8 @@ public class GameRenderer implements Renderer{
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
         // Enable 2D maping capability
-        car.loadTexture(gl, Global.CAR, Global.context);
+        car.loadTexture(gl, Global.CAR, context);
+        chalenger.loadTexture(gl, Global.CAR2, context);
         gl.glEnable(GL10.GL_TEXTURE_2D);
         gl.glClearDepthf(1.0f);
 
@@ -103,9 +179,9 @@ public class GameRenderer implements Renderer{
         gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
 
         // Load textures
-        road.loadTexture(gl, Global.ROAD , Global.context);
-        right.loadTexture(gl, Global.TURN_RIGHT, Global.context);
-        left.loadTexture(gl, Global.TURN_LEFT, Global.context);
+        road.loadTexture(gl, Global.ROAD , context);
+        right.loadTexture(gl, Global.TURN_RIGHT, context);
+        left.loadTexture(gl, Global.TURN_LEFT, context);
     }
 
     public void DrawRight(GL10 gl){
@@ -137,11 +213,17 @@ public class GameRenderer implements Renderer{
     private void ScrollRoad(){
         if(roadYOffset < 1.0f){ // reset road texture position
             roadYOffset += carSpeed;
+            opponent -=(carSpeed*11.2);
+            opponent2 -=(carSpeed*11.2);
+            opponent3 -=(carSpeed*11.2);
+            opponent4 -=(carSpeed*11.2);
+            crash();
             if(carSpeed < 0.03f){
                 carSpeed += 0.0002f;
             }
         }else{
             roadYOffset -= 1.0f;
+            //opponent
         }
     }
 

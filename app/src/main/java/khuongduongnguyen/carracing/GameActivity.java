@@ -10,6 +10,7 @@ import static khuongduongnguyen.carracing.Global.display;
 public class GameActivity extends Activity {
     private GameView gameView;
     public int check=0;
+
         @Override
         protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
